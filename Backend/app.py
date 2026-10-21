@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS 
-from agent.tools import ALL_TOOLS
+from agent.tools import ALL_TOOLS, TOOL_FUNCTIONS
 import requests
 import sqlite3
 import uuid
 import os
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -72,6 +73,29 @@ def get_chat_messages(chat_id):
 
 
 # AI chatting routes below
+def process_tool_calls(message_obj):
+    if "tool_calls" in message_obj and message_obj["tool_calls"]:
+        tool_call = message_obj["tool_calls"][0]
+        function_name = tool_call["function"]["name"]
+        
+        # OpenAI sends arguments as a JSON string. Ollama sends them as a dict.
+        args = tool_call["function"]["arguments"]
+        if isinstance(args, str):
+            arguments = json.loads(args)
+        else:
+            arguments = args
+            
+        print(f" AI requested tool: {function_name} with args: {arguments}")
+        
+        if function_name in TOOL_FUNCTIONS:
+            tool_result = TOOL_FUNCTIONS[function_name](**arguments)
+            print(f"Tool execution result: {tool_result}")
+            return f"I used the {function_name} tool and got: {tool_result}"
+        else:
+            return f"Error: Tool '{function_name}' not found in registry."
+            
+    # If no tool was called, return the normal text content
+    return message_obj.get("content", "")
 
 @app.route('/chats', methods=['POST'])
 def chat():
@@ -124,13 +148,15 @@ def chat():
             error_msg = result["error"]
             if isinstance(error_msg, dict):
                 error_msg = error_msg.get("message", str(error_msg)) # OpenAI style
-            bot_answer = f"⚠️ API Error: {error_msg}"
+            bot_answer = f"API Error: {error_msg}"
             
         elif "choices" in result:
-            bot_answer = result["choices"][0]["message"]["content"]
+            message_obj = result["choices"][0]["message"]
+            bot_answer = process_tool_calls(message_obj)
             
         elif "message" in result:
-            bot_answer = result["message"]["content"]
+            message_obj = result["message"]
+            bot_answer = process_tool_calls(message_obj)
             
 
         else:
