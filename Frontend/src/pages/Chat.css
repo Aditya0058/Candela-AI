@@ -1,0 +1,109 @@
+
+.chat-content{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+
+}
+.chat-box-here{
+    align-self: center;
+}
+.chat-header{
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
+}
+.chat-name {
+    font-family: var(--another-font);
+    font-size: 20px;
+    font-weight: 550;
+}
+.share-btn {
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: none;
+    background-color: var(--color-muted);
+    color: var(--light-font-color);
+    cursor: pointer;
+    font-family: var(--another-font);
+}
+.share-btn:hover{
+    background-color: var(--secondary-bg);
+}
+
+.actual-chats{
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    scrollbar-color: var(--color-muted) transparent;
+}
+.message.user{
+    align-self: flex-end;
+    font-family: var(--another-font);
+    background-color: var(--color-muted);
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 600px;
+}
+
+
+.message.assistant{
+    align-self: flex-start;
+    font-family: var(--another-font);
+    padding-bottom: 20px;
+    max-width: 1000px;
+}
+.message p{
+    margin: 0 0 10px 0;
+}
+.message p:last-child {
+    margin-bottom: 0;   /* no extra space at the end */
+}
+.message h1, .message h2, .message h3{
+    margin-top: 24px;
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+.message ul, .message ol{
+    margin-bottom: 16px;
+    padding-left: 24px;
+
+}
+.message code {
+    background-color: rgba(24, 24, 24, 0.1);
+    margin: 5px;
+    padding: 1px;
+    border-radius: 10px;
+    font-family: monospace;
+}
+.message table {
+    width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+.message th, .message td {
+    border: 1px solid var(--color-muted); 
+    padding: 10px 14px;
+    text-align: left;
+}
+.message th {
+    background-color: var(--muted); 
+    font-weight: bold;
+    color: var(--light-font-color);
+}
+.error-banner{
+    background-color: #ff4d4d;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 0;
+    text-align: center;
+    font-family: var(--another-font);
+}

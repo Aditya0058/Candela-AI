@@ -1,0 +1,70 @@
+
+.settings-heading{
+    justify-self:flex-start;
+    align-self: flex-start;
+    font-family: var(--another-font);
+    font-size: 40px;
+}
+.credentials, .personal-info{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    padding-top: 30px;
+    
+
+}
+.input-group label {
+    font-family: var(--another-font);
+    font-size: 20px;
+    font-weight: 400;
+    padding-bottom: 10px;
+    text-decoration: dotted underline;
+}
+
+
+.input-group input {
+    padding: 10px;
+    font-size: 24px;
+    min-width: 200px;
+    width: 500px;
+    background-color: var(--secondary-bg);
+    color: var(--light-font-color);
+    font-family: var(--another-font);
+    border: none;
+    border-radius: 10px;
+}
+.input-group::placeholder {
+  color: #888888; 
+  font-size: 14px;
+  font-style: italic; 
+  opacity: 1;   
+}
+
+.save-btn-div {
+    padding-top: 30px;
+
+}
+.save-btn {
+    padding: 15px;
+    background-color: var(--muted);
+    border: none;
+    border-radius: 15px;
+    color: var(--light-font-color);
+    font-size: 20px;
+    font-family: var(--another-font);
+    font-weight: 500;
+}
+.credentials-heading, .personal-info-heading{
+    font-family: var(--another-font);
+    font-size: 30px;
+    padding-top: 30px;
+    color: var(--secondary-bg);
+    font-weight: 600;
+}
