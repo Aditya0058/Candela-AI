@@ -3,6 +3,9 @@ import requests
 
 app = Flask(__name__)
 
+AI_URL = "http://127.0.0.1:2026/api/chat"
+AI_MODEL = "gemma4:31b-cloud"
+
 @app.post("/chat")
 def chat():
     # recive message
@@ -11,24 +14,24 @@ def chat():
     
     # prepare message to send to ai 
     payload = {
-        "model" : "gemma4:31b-cloud",
+        "model" : AI_MODEL,
         "messages": [
             {"role": "user", "content": message}
         ], 
         "stream": False
     }
     # send prepared message's json to ai and store it into response
-    response_received = requests.post('http://127.0.0.1:2026/api/chat', json=payload)
+    received = requests.post(AI_URL, json=payload, timeout=30)
 
-    print("STATUS:", response_received.status_code)
-    print("RAW BODY:", response_received.text)
-    return {"debug": "look at your terminal, not the browser"}
+    # if upstream failed return error
+    if received.status_code != 200:
+        return {"error": "ai upstream failed", "upstream_status": received.status_code}, 502
 
-    # extract the actual response from response recieved
-    # actual_response = response_recieved["message"]
+    # parsing json and finding actual response
+    body = received.json()
+    actual_response = body["message"]["content"]
 
-    # # returning ai response to frontend (from where the endpoint was called)
-    # return {"recieved" : message}
+    return {"reply": actual_response}
 
 
 if __name__ == "__main__":
