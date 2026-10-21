@@ -74,7 +74,6 @@ def get_chat_messages(chat_id):
 
 # AI chatting routes below
 def process_tool_calls(message_obj):
-    print("TYPEOF message_obj:", type(message_obj))
         # SAFETY CHECK: If the AI returned a plain string instead of a dict
     if isinstance(message_obj, str):
         return {"called": False, "content": message_obj}
@@ -90,11 +89,9 @@ def process_tool_calls(message_obj):
         else:
             arguments = args
             
-        print(f" AI requested tool: {function_name} with args: {arguments}")
         
         if function_name in TOOL_FUNCTIONS:
             tool_result = TOOL_FUNCTIONS[function_name](**arguments)
-            print(f"Tool execution result: {tool_result}")
             return {
                 "called": True,
                 "name": function_name,
