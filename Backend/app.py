@@ -74,6 +74,11 @@ def get_chat_messages(chat_id):
 
 # AI chatting routes below
 def process_tool_calls(message_obj):
+    print("TYPEOF message_obj:", type(message_obj))
+        # SAFETY CHECK: If the AI returned a plain string instead of a dict
+    if isinstance(message_obj, str):
+        return {"called": False, "content": message_obj}
+
     if "tool_calls" in message_obj and message_obj["tool_calls"]:
         tool_call = message_obj["tool_calls"][0]
         function_name = tool_call["function"]["name"]
@@ -90,12 +95,23 @@ def process_tool_calls(message_obj):
         if function_name in TOOL_FUNCTIONS:
             tool_result = TOOL_FUNCTIONS[function_name](**arguments)
             print(f"Tool execution result: {tool_result}")
-            return f"I used the {function_name} tool and got: {tool_result}"
+            return {
+                "called": True,
+                "name": function_name,
+                "result": tool_result,
+                "assistant_message": message_obj
+            }    
         else:
-            return f"Error: Tool '{function_name}' not found in registry."
+            return {"called": False, "error": f"Tool '{function_name}' not found."}
             
     # If no tool was called, return the normal text content
-    return message_obj.get("content", "")
+    content = ""
+    if isinstance(message_obj, dict):
+        content = message_obj.get("content", "")
+    else:
+        content = str(message_obj)
+
+    return {"called": False, "content": content}
 
 @app.route('/chats', methods=['POST'])
 def chat():
@@ -147,18 +163,89 @@ def chat():
         if "error" in result:
             error_msg = result["error"]
             if isinstance(error_msg, dict):
-                error_msg = error_msg.get("message", str(error_msg)) # OpenAI style
+                error_msg = error_msg.get("message", str(error_msg))
             bot_answer = f"API Error: {error_msg}"
             
         elif "choices" in result:
             message_obj = result["choices"][0]["message"]
-            bot_answer = process_tool_calls(message_obj)
+            tool_data = process_tool_calls(message_obj)
             
+            if not isinstance(tool_data, dict):
+                bot_answer = f"System Error: Expected dict, got {type(tool_data)}"
+            
+            elif tool_data.get("called"):
+                # --- OPENAI AGENT LOOP ---
+                clean_assistant_msg = {
+                    "role": "assistant",
+                    "content": tool_data["assistant_message"].get("content", ""),
+                    "tool_calls": tool_data["assistant_message"].get("tool_calls")
+                }
+                messages_with_system.append(clean_assistant_msg)
+                
+                messages_with_system.append({
+                    "role": "tool",
+                    "content": str(tool_data["result"]),
+                    "tool_call_id": tool_data["assistant_message"]["tool_calls"][0].get("id", "default_id")
+                })
+                
+                print("Sending tool result back to AI...")
+                second_payload = {
+                    "model": model_name,
+                    "messages": messages_with_system,
+                    "stream": False,
+                    "tools": ALL_TOOLS
+                }
+                second_response = requests.post(proxy_url, json=second_payload, headers=headers)
+                second_result = second_response.json()
+                
+                print("RAW SECOND RESULT:", second_result)
+                
+                if "error" in second_result:
+                    bot_answer = f"API Error on 2nd call: {second_result['error']}"
+                elif "choices" in second_result:
+                    bot_answer = second_result["choices"][0]["message"]["content"]
+                elif "message" in second_result:
+                    bot_answer = second_result["message"]["content"]
+                else:
+                    bot_answer = "Unknown error on second call."
+            else:
+                bot_answer = tool_data.get("content", "")
+                
         elif "message" in result:
+            # --- OLLAMA AGENT LOOP ---
             message_obj = result["message"]
-            bot_answer = process_tool_calls(message_obj)
+            tool_data = process_tool_calls(message_obj)
             
-
+            if isinstance(tool_data, dict) and tool_data.get("called"):
+                clean_assistant_msg = {
+                    "role": "assistant",
+                    "content": tool_data["assistant_message"].get("content", ""),
+                    "tool_calls": tool_data["assistant_message"].get("tool_calls")
+                }
+                messages_with_system.append(clean_assistant_msg)
+                messages_with_system.append({
+                    "role": "tool",
+                    "content": str(tool_data["result"])
+                })
+                
+                second_payload = {
+                    "model": model_name, 
+                    "messages": messages_with_system, 
+                    "stream": False,
+                    "tools": ALL_TOOLS
+                }
+                second_response = requests.post(proxy_url, json=second_payload, headers=headers)
+                second_result = second_response.json()
+                
+                if "message" in second_result:
+                    bot_answer = second_result["message"]["content"]
+                elif "choices" in second_result:
+                    bot_answer = second_result["choices"][0]["message"]["content"]
+                else:
+                    bot_answer = "Unknown error on second call."
+            else:
+                bot_answer = tool_data.get("content", "")
+            
         else:
             bot_answer = f"Unexpected response format from proxy: {result}"
             
