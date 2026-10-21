@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS 
+from agent.tools import ALL_TOOLS
 import requests
 import sqlite3
 import uuid
 import os
+
 app = Flask(__name__)
 CORS(app)
 
@@ -110,7 +112,8 @@ def chat():
     payload = {
         "model": model_name,
         "messages": messages_with_system,
-        "stream": False
+        "stream": False,
+        "tools": ALL_TOOLS
     }
 
     try:
