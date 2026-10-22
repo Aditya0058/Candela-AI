@@ -15,7 +15,7 @@ Candela Agent is opensource software where there are lots of tools given to AI w
 # HOW to connect telegram 
 1. Go to @botfather on telegram and create your bot, name it
 2. paste your bot token id in the settings and save it
-3. go to any chatid helper bot on telegram and get you telegram chat id
+3. go to any chatid helper (you can go to @ChatIdInfoBot )bot on telegram and get you telegram chat id
 4. paste that chat id into settings and save it again 
 5. and wollaa your telegram is now connected to candela just say "Send test message to my telegram"
 
