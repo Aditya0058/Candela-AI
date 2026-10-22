@@ -8,3 +8,6 @@ I was know that this is very new for me like in typescipt but still I thought I 
 ## Starting journal in codebase
 - I know that i am starting joural too late but no worries its never late to start
 - Today I was building for giving my candela  a seperate chat ids and display them in sidebar - but I noticed that it is going very difficult to transfer data from here to there and I have seriously got out of my mind - thats why I think I should restructure my logic of backend
+
+# 22/10
+- gave ai access to tools present in (/backend/agents/tools)

@@ -45,6 +45,7 @@ function Chatbox({onSend, isLoading} : ChatboxProps) {
                 disabled = {isLoading}
             />
             <div className="chat-box-btns">
+                {/* <button className="attach-files">Attach</button> */}
                 <button className="llm-model">Model:  {candela_model}</button>
                 <button className="send-user-input" onClick={sendMessage} disabled={isLoading}>
                     {isLoading ? "Thinking..." : "Send"}
