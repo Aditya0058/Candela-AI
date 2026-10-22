@@ -14,10 +14,10 @@ if ! command -v npm &> /dev/null; then echo "////// Bruhhhh!, Node.js/NPM is not
 
 echo -e "${color}:) :) Huurayyyy! Prerequisites met!${NC}"
 
-if [ ! -d "Candela-Agent-MVP" ]; then
+if [ ! -d "Candela-AI" ]; then
     echo -e "${color}Wait bro Downloading Candela...${NC}"
     git clone https://github.com/Aditya0058/Candela-AI.git
-    cd Candela-Agent-MVP
+    cd Candela-AI
 else
     echo -e "${color}you r smart Candela directory already exists! Updating...${NC}"
     cd Candela-AI
