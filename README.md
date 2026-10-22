@@ -55,7 +55,7 @@ settings ui updated
 # How to run it on your system
 ### Use following command
 ```
-curl -fsSL https://raw.githubusercontent.com/Aditya0058/Candela-Agent-MVP/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Aditya0058/Candela-AI/main/install.sh | bash
 
 ```
 
