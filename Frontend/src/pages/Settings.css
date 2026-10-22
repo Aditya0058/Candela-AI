@@ -5,7 +5,7 @@
     font-family: var(--another-font);
     font-size: 40px;
 }
-.credentials, .personal-info{
+.credentials, .personal-info, .tools-credentials{
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -26,6 +26,7 @@
     font-weight: 400;
     padding-bottom: 10px;
     text-decoration: dotted underline;
+    color: var(--light-font-color);
 }
 
 
@@ -49,19 +50,25 @@
 
 .save-btn-div {
     padding-top: 30px;
+    width: 100%;
+    display: flex;
 
 }
 .save-btn {
     padding: 15px;
     background-color: var(--muted);
+    cursor: pointer;
     border: none;
     border-radius: 15px;
     color: var(--light-font-color);
     font-size: 20px;
     font-family: var(--another-font);
     font-weight: 500;
+    margin-left: auto;
+    margin-right: auto;
 }
-.credentials-heading, .personal-info-heading{
+
+.credentials-heading, .personal-info-heading, .tools-credentials{
     font-family: var(--another-font);
     font-size: 30px;
     padding-top: 30px;
