@@ -8,6 +8,8 @@ function Settings() {
     const [modelName, setModelName] = useState(() => localStorage.getItem('candela_model') || '');  
     const [userName, setUserName] = useState(() => localStorage.getItem('user_name') || '');  
     const [websearchapikey, setwebsearchapikey] = useState(() => localStorage.getItem('web_search_api_key') || '');  
+    const [telegrambottoken, settelegrambottoken] = useState(() => localStorage.getItem('telegram_bot_token') || '');  
+    const [telegramchatid, settelegrachatid] = useState(() => localStorage.getItem('telegram_chat_id') || '');  
 
     const saveSettings = () => {
         localStorage.setItem('candela_api_key', apiKey);
@@ -15,6 +17,8 @@ function Settings() {
         localStorage.setItem('candela_proxy_url', proxyUrl)
         localStorage.setItem('web_search_api_key', websearchapikey)
         localStorage.setItem('user_name', userName)
+        localStorage.setItem('telegram_bot_token', telegrambottoken)
+        localStorage.setItem('telegram_chat_id', telegramchatid)
         alert("Settings saved successfully!");
     }
 
@@ -64,6 +68,10 @@ function Settings() {
                         onChange={(e) => setApiKey(e.target.value)}
                     />
                 </div>
+                
+            </div>
+            <div className="tools-credentials">
+                <div className="tools-credential-heading">Tools Credentials</div>
                 <div className="input-group">
                     <label>Web Search API Key</label>
                     <input 
@@ -73,9 +81,28 @@ function Settings() {
                         onChange={(e) => setwebsearchapikey(e.target.value)}
                     />
                 </div>
-                <div className="save-btn-div">
-                    <button onClick={saveSettings} className="save-btn">Save Settings</button>
+                <div className="input-group">
+                    <label>Telegram Bot Token</label>
+                    <input 
+                        type="text"
+                        placeholder='go to @botfather and create ur token'
+                        value={telegrambottoken}
+                        onChange={(e) => settelegrambottoken(e.target.value)}
+                    />
                 </div>
+                <div className="input-group">
+                    <label>Telegram Chat ID</label>
+                    <input 
+                        type="text"
+                        placeholder='go to any helper bot and find yours'
+                        value={telegramchatid}
+                        onChange={(e) => settelegrachatid(e.target.value)}
+                    />
+                </div>
+
+            </div>
+            <div className="save-btn-div">
+                    <button onClick={saveSettings} className="save-btn">Save Settings</button>
             </div>
         </>
     )
