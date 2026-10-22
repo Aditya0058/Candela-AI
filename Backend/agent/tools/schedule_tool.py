@@ -5,7 +5,7 @@ import time
 
 
 
-def schedule_action.py(tool_name: str, arguments_json: str, scheduled_time: str):
+def schedule_action(tool_name: str, arguments_json: str, scheduled_time: str):
     """
     scheduled_time should be a string in the format: "YYYY-MM-DD HH:MM:SS"
     Example: "2026-10-22 17:30:00"

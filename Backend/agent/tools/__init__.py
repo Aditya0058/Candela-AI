@@ -19,6 +19,6 @@ TOOL_FUNCTIONS = {
     "calculate": calculate,
     "web_search": web_search,
     "send_message_on_telegram": send_message_on_telegram,
-    "schedul_action": schedul_action,
+    "schedule_action": schedule_action,
     # tool funcitons here
 }
