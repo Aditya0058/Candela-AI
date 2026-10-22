@@ -4,7 +4,7 @@ set -e
 color='\033[0;33m' # yellow
 NC='\033[0m' # no color
 
-echo -e "${color}Starting Candela-Agent-MVP Initialization${NC}"
+echo -e "${color}Starting Candela-AI Initialization${NC}"
 
 # check required tools
 echo "Checking prerequisites"
