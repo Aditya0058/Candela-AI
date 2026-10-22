@@ -28,6 +28,9 @@ function Chat({chats, updateChatMessages}: chatProps){
     const apiKey = localStorage.getItem('candela_api_key') || '';
     const proxyUrl = localStorage.getItem('candela_proxy_url') || '';
     const modelName = localStorage.getItem('candela_model') || ' ';
+    const telegrambottoken = localStorage.getItem('telegram_bot_token') || '';
+    const telegramchatid = localStorage.getItem('telegram_chat_id') || '';
+    const websearchapikey = localStorage.getItem('web_search_api_key') || '';
 
     const currentChat = chats.find(c => c.id === chatId);
     useEffect(() => {
@@ -74,7 +77,10 @@ function Chat({chats, updateChatMessages}: chatProps){
                     messages: updatedMessages,
                     api_key: apiKey,
                     proxy_url: proxyUrl,
-                    model: modelName
+                    model: modelName,
+                    telegram_chat_id: telegramchatid,
+                    telegram_bot_token: telegrambottoken,
+                    web_search_api_key: websearchapikey
                 }),
             })
             const data = await response.json();
