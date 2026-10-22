@@ -12,7 +12,6 @@ ALL_TOOLS = [
     # more tools here
 ]
 
-# 2. A dictionary mapping tool names to their actual Python functions
 TOOL_FUNCTIONS = {
     "get_current_time": get_current_time,
     "calculate": calculate,
