@@ -16,11 +16,11 @@ echo -e "${color}:) :) Huurayyyy! Prerequisites met!${NC}"
 
 if [ ! -d "Candela-Agent-MVP" ]; then
     echo -e "${color}Wait bro Downloading Candela...${NC}"
-    git clone https://github.com/Aditya0058/Candela-Agent-MVP.git
+    git clone https://github.com/Aditya0058/Candela-AI.git
     cd Candela-Agent-MVP
 else
     echo -e "${color}you r smart Candela directory already exists! Updating...${NC}"
-    cd Candela-Agent-MVP
+    cd Candela-AI
     git pull
 fi
 
@@ -52,7 +52,7 @@ cd ..
 
 echo -e "${color}Installation completed${NC}"
 echo " "
-echo -e " ${color} Let me start it for you, Launching Candela (remember MVP) ${NC}"
+echo -e " ${color} Let me start it for you, Launching Candela (remember not MVP but real one) ${NC}"
 # start.py running
 python3 start.py
 
