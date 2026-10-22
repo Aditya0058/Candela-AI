@@ -154,98 +154,71 @@ def chat():
     }
 
     try:
-        response = requests.post(proxy_url, json=payload, headers=headers)
-        result = response.json()
+        max_iterations = 20
+        bot_answer = None
 
-        if "error" in result:
-            error_msg = result["error"]
-            if isinstance(error_msg, dict):
-                error_msg = error_msg.get("message", str(error_msg))
-            bot_answer = f"API Error: {error_msg}"
+        while max_iterations > 0:
+           
+            response = requests.post(proxy_url, json=payload, headers=headers)
+            result = response.json()
+
+           
+            if "error" in result:
+                error_msg = result["error"]
+                if isinstance(error_msg, dict):
+                    error_msg = error_msg.get("message", str(error_msg))
+                bot_answer = f"API Error: {error_msg}"
+                break
+
             
-        elif "choices" in result:
-            message_obj = result["choices"][0]["message"]
-            tool_data = process_tool_calls(message_obj)
-            
-            if not isinstance(tool_data, dict):
-                bot_answer = f"System Error: Expected dict, got {type(tool_data)}"
-            
-            elif tool_data.get("called"):
-                # --- OPENAI AGENT LOOP ---
-                clean_assistant_msg = {
-                    "role": "assistant",
-                    "content": tool_data["assistant_message"].get("content", ""),
-                    "tool_calls": tool_data["assistant_message"].get("tool_calls")
-                }
-                messages_with_system.append(clean_assistant_msg)
-                
-                messages_with_system.append({
-                    "role": "tool",
-                    "content": str(tool_data["result"]),
-                    "tool_call_id": tool_data["assistant_message"]["tool_calls"][0].get("id", "default_id")
-                })
-                
-                print("Sending tool result back to AI...")
-                second_payload = {
-                    "model": model_name,
-                    "messages": messages_with_system,
-                    "stream": False,
-                    "tools": ALL_TOOLS
-                }
-                second_response = requests.post(proxy_url, json=second_payload, headers=headers)
-                second_result = second_response.json()
-                
-                print("RAW SECOND RESULT:", second_result)
-                
-                if "error" in second_result:
-                    bot_answer = f"API Error on 2nd call: {second_result['error']}"
-                elif "choices" in second_result:
-                    bot_answer = second_result["choices"][0]["message"]["content"]
-                elif "message" in second_result:
-                    bot_answer = second_result["message"]["content"]
-                else:
-                    bot_answer = "Unknown error on second call."
+            is_openai = "choices" in result
+            if is_openai:
+                message_obj = result["choices"][0]["message"]
+            elif "message" in result:
+                message_obj = result["message"]
             else:
-                bot_answer = tool_data.get("content", "")
-                
-        elif "message" in result:
-            # --- OLLAMA AGENT LOOP ---
-            message_obj = result["message"]
-            tool_data = process_tool_calls(message_obj)
+                bot_answer = f"Unexpected format: {result}"
+                break
+
             
+            tool_data = process_tool_calls(message_obj)
+
             if isinstance(tool_data, dict) and tool_data.get("called"):
+            
+                print(f"Loop iteration {6 - max_iterations}: Executing tool {tool_data['name']}")
+                
+                
                 clean_assistant_msg = {
                     "role": "assistant",
-                    "content": tool_data["assistant_message"].get("content", ""),
-                    "tool_calls": tool_data["assistant_message"].get("tool_calls")
+                    "content": message_obj.get("content", ""),
+                    "tool_calls": message_obj.get("tool_calls")
                 }
                 messages_with_system.append(clean_assistant_msg)
-                messages_with_system.append({
+                
+                
+                tool_result_msg = {
                     "role": "tool",
                     "content": str(tool_data["result"])
-                })
-                
-                second_payload = {
-                    "model": model_name, 
-                    "messages": messages_with_system, 
-                    "stream": False,
-                    "tools": ALL_TOOLS
                 }
-                second_response = requests.post(proxy_url, json=second_payload, headers=headers)
-                second_result = second_response.json()
                 
-                if "message" in second_result:
-                    bot_answer = second_result["message"]["content"]
-                elif "choices" in second_result:
-                    bot_answer = second_result["choices"][0]["message"]["content"]
-                else:
-                    bot_answer = "Unknown error on second call."
+                if is_openai:
+                    tool_result_msg["tool_call_id"] = message_obj["tool_calls"][0].get("id", "default_id")
+                
+                messages_with_system.append(tool_result_msg)
+
+                
+                payload["messages"] = messages_with_system
+                max_iterations -= 1
+
             else:
+               
                 bot_answer = tool_data.get("content", "")
-            
-        else:
-            bot_answer = f"Unexpected response format from proxy: {result}"
-            
+                break 
+
+        
+        if bot_answer is None:
+            bot_answer = "Agent Error: Maximum tool execution limit reached. The AI got stuck in a loop."
+
     except Exception as e:
         bot_answer = f"Connection Error: {str(e)}"
 
