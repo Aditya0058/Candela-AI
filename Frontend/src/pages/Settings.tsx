@@ -7,11 +7,13 @@ function Settings() {
     const [proxyUrl, setProxyUrl] = useState(() => localStorage.getItem('candela_proxy_url') || '');
     const [modelName, setModelName] = useState(() => localStorage.getItem('candela_model') || '');  
     const [userName, setUserName] = useState(() => localStorage.getItem('user_name') || '');  
+    const [websearchapikey, setwebsearchapikey] = useState(() => localStorage.getItem('web_search_api_key') || '');  
 
     const saveSettings = () => {
         localStorage.setItem('candela_api_key', apiKey);
         localStorage.setItem('candela_model', modelName);
         localStorage.setItem('candela_proxy_url', proxyUrl)
+        localStorage.setItem('web_search_api_key', websearchapikey)
         localStorage.setItem('user_name', userName)
         alert("Settings saved successfully!");
     }
@@ -60,6 +62,15 @@ function Settings() {
                         placeholder="Leave blank if using local Ollama" 
                         value={apiKey}
                         onChange={(e) => setApiKey(e.target.value)}
+                    />
+                </div>
+                <div className="input-group">
+                    <label>Web Search API Key</label>
+                    <input 
+                        type="password" 
+                        placeholder='put you ollama-web-searchapikey'
+                        value={websearchapikey}
+                        onChange={(e) => setwebsearchapikey(e.target.value)}
                     />
                 </div>
                 <div className="save-btn-div">
