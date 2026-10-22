@@ -25,6 +25,7 @@ def schedule_action(tool_name: str, arguments_json: str, scheduled_time: str):
             from . import TOOL_FUNCTIONS
             if tool_name in TOOL_FUNCTIONS:
                 print(f"executing scheduled tool {tool_name}")
+                TOOL_FUNCTIONS[tool_name](**args) 
             else:
                 print(f"Tool not found {tool_name}")
 
@@ -37,7 +38,6 @@ def schedule_action(tool_name: str, arguments_json: str, scheduled_time: str):
         return f"Format error. Ensure time is 'YYYY-MM-DD HH:MM:SS'. Details: {str(e)}"
     except Exception as e:
         return f"Failed to schedule action: {str(e)}"
-
 
 TOOL_SCHEMA = {
     "type": "function",
