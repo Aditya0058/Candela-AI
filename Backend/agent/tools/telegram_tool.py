@@ -1,11 +1,11 @@
 
-def send_message_on_telegram(message: str):
+def send_message_on_telegram(message: str, **kwargs):
      import os
      from dotenv import load_dotenv
      import requests
      load_dotenv()
-     chat_id = os.environ.get("TELEGRAM_CHAT_ID")
-     bot_token = os.environ.get("TELEGRAM_BOT_TOKEN")
+     bot_token = kwargs.get("telegram_bot_token") or os.environ.get("TELEGRAM_BOT_TOKEN")
+     chat_id = kwargs.get("telegram_chat_id") or os.environ.get("TELEGRAM_CHAT_ID")
 
      if not chat_id:
           raise ValueError("chat id missing! please check your .env file")

@@ -73,7 +73,7 @@ def get_chat_messages(chat_id):
 
 
 # AI chatting routes below
-def process_tool_calls(message_obj):
+def process_tool_calls(message_obj, credentials):
         # SAFETY CHECK: If the AI returned a plain string instead of a dict
     if isinstance(message_obj, str):
         return {"called": False, "content": message_obj}
@@ -91,7 +91,7 @@ def process_tool_calls(message_obj):
             
         
         if function_name in TOOL_FUNCTIONS:
-            tool_result = TOOL_FUNCTIONS[function_name](**arguments)
+            tool_result = TOOL_FUNCTIONS[function_name](**arguments, **credentials)
             return {
                 "called": True,
                 "name": function_name,
@@ -118,6 +118,15 @@ def chat():
     proxy_url = data.get('proxy_url', 'http://127.0.0.1:2026/api/chat')
     model_name = data.get('model', 'gemma4:31b-cloud')
     api_key = data.get('api_key', '')   
+    telegram_bot_token = data.get('telegram_bot_token', '')
+    telegram_chat_id = data.get('telegram_chat_id', '')
+    web_search_api_key = data.get('web_search_api_key', '')
+
+    user_credentials = {
+        "telegram_bot_token": telegram_bot_token,
+        "telegram_chat_id": telegram_chat_id,
+        "web_search_api_key": web_search_api_key
+    }
 
     user_msg = messages[-1]
 
@@ -181,7 +190,7 @@ def chat():
                 break
 
             
-            tool_data = process_tool_calls(message_obj)
+            tool_data = process_tool_calls(message_obj, user_credentials)
 
             if isinstance(tool_data, dict) and tool_data.get("called"):
             

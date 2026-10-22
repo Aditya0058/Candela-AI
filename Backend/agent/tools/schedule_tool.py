@@ -5,7 +5,7 @@ import time
 
 
 
-def schedule_action(tool_name: str, arguments_json: str, scheduled_time: str):
+def schedule_action(tool_name: str, arguments_json: str, scheduled_time: str, **kwargs):
     """
     scheduled_time should be a string in the format: "YYYY-MM-DD HH:MM:SS"
     Example: "2026-10-22 17:30:00"
@@ -25,7 +25,7 @@ def schedule_action(tool_name: str, arguments_json: str, scheduled_time: str):
             from . import TOOL_FUNCTIONS
             if tool_name in TOOL_FUNCTIONS:
                 print(f"executing scheduled tool {tool_name}")
-                TOOL_FUNCTIONS[tool_name](**args) 
+                TOOL_FUNCTIONS[tool_name](**args, **kwargs) 
             else:
                 print(f"Tool not found {tool_name}")
 

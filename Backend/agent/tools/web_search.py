@@ -1,10 +1,10 @@
 
-def web_search(query_text):
+def web_search(query_text: str, **kwargs):
     import os
     from dotenv import load_dotenv
     import requests
     load_dotenv()
-    my_api_key = os.environ.get("WEB_SEARCH_API_KEY")
+    my_api_key = kwargs.get("web_search_api_key") or os.environ.get("WEB_SEARCH_API_KEY")
 
     if not my_api_key:
             raise ValueError("API key missing! Please check your .env file.")
