@@ -3,7 +3,7 @@ def web_search(query_text):
     import os
     from dotenv import load_dotenv
     import requests
-
+    load_dotenv()
     my_api_key = os.environ.get("WEB_SEARCH_API_KEY")
 
     if not my_api_key:
@@ -20,7 +20,6 @@ def web_search(query_text):
         response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status() # Raises an error for bad responses (4xx, 5xx)
         
-        # 6. Parse and return the JSON data
         return response.json()
         
     except requests.exceptions.RequestException as e:
