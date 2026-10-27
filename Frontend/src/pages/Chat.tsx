@@ -15,6 +15,8 @@ interface chatProps{
     updateChatMessages: (chatId: string, newMessages: Message[]) => void;
 };
 
+const DEPLOYMENT_URL = "https://candela-ai-backend.adityarajputnest.hackclub.app"
+
 function Chat({chats, updateChatMessages}: chatProps){
 
     // extracting data
@@ -48,7 +50,7 @@ function Chat({chats, updateChatMessages}: chatProps){
         if (!chatId) return;
 
     async function loadMessages() {
-        const response = await fetch(`http://127.0.0.1:5000/api/chats/${chatId}/messages`);
+        const response = await fetch(`${DEPLOYMENT_URL}/api/chats/${chatId}/messages`);
         const data = await response.json();
         
         // This updates App.tsx with the messages from the DB!
@@ -69,7 +71,7 @@ function Chat({chats, updateChatMessages}: chatProps){
     
             updateChatMessages(chatId, updatedMessages);
     
-            const response = await fetch("http://127.0.0.1:5000/chats", {
+            const response = await fetch(`${DEPLOYMENT_URL}/chats`, {
                 method:"POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ 
