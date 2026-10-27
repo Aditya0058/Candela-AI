@@ -91,7 +91,19 @@ def process_tool_calls(message_obj, credentials):
             
         
         if function_name in TOOL_FUNCTIONS:
-            tool_result = TOOL_FUNCTIONS[function_name](**arguments, **credentials)
+            # tool_result = TOOL_FUNCTIONS[function_name](**arguments, **credentials)
+            tool_credentials = {
+                "send_message_on_telegram": {
+                    "telegram_bot_token": credentials.get("telegram_bot_token"),
+                    "telegram_chat_id": credentials.get("telegram_chat_id"),
+                },
+                "web_search": {
+                    "web_search_api_key": credentials.get("web_search_api_key"),
+                },
+            }
+
+            extra_args = tool_credentials.get(function_name, {})
+            tool_result = TOOL_FUNCTIONS[function_name](**arguments, **extra_args)
             return {
                 "called": True,
                 "name": function_name,
