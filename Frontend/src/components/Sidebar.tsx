@@ -14,7 +14,7 @@ function Sidebar({chats, deleteChat}: SidebarProps) {
         <div className="sidebar">
             <div className="sidebar-header">
               <Link to="/home">
-                <div className="logo"> <img src="src/assets/candela_logo.png" alt="" />Candela</div>
+                <div className="logo"> <img src="candela_logo.png" alt="" />Candela</div>
               </Link>
               <Link to="/home" className='new-chat-btn'>New Chat</Link>
 

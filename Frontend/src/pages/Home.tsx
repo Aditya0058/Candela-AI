@@ -24,7 +24,7 @@ function Home({onCreateChat}: HomeProps) {
     return (
         <div className="main-content">
             <div className="greetings">
-                <img src="src/assets/candela_logo.png" alt="logo" className='greeting-logo' />
+                <img src="candela_logo.png" alt="logo" className='greeting-logo' />
                 <h2 className='greeting'>Welcome Back, {userName}</h2>
             </div>
             <Chatbox 
